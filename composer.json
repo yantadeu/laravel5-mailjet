@@ -1,10 +1,12 @@
 {
     "name": "sboo/laravel5-mailjet",
-    "description": "",
+    "description": "Mailjet driver for Laravel 5",
+    "keywords": ["laravel", "laravel 5", "mailjet", "api", "v3"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Ramon Ackermann",
-            "email": "r.ackermann@uselab.com"
+            "email": "ramon.ackermann@sboo.eu"
         }
     ],
     "require": {
@@ -13,8 +15,8 @@
         "guzzlehttp/guzzle": "~4.0"
     },
     "autoload": {
-        "psr-0": {
-            "Sboo\\Laravel5Mailjet": "src/"
+        "psr-4": {
+            "Sboo\\Laravel5Mailjet\\": "src/Sboo/Laravel5Mailjet/"
         }
     },
     "minimum-stability": "stable"
