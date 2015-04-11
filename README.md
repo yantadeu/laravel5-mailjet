@@ -11,7 +11,7 @@ This package extends the Laravel 5 MailService to enable Mailjet integration, ba
 Firstly you want to include this package in your composer.json file.
 ```javascript
 "require": {
-        "sboo/laravel5-mailjet" : "1.0.*"
+    "sboo/laravel5-mailjet" : "1.0.*"
 }
 ```
     
@@ -21,17 +21,18 @@ composer update
 ```
 
 Next you open up app/config/app.php and replace the MailServiceProvider with
-
+```php
 'Sboo\Laravel5Mailjet\MailjetServiceProvider'
+```
 
 **NOTE** It is very important that you replace the default service providers to avoid conflicts. You don't lose any original functionality regarding mail drivers, they are still available.
 
 Configuration is pretty easy: add the following entry to your config/services.php:
 ```php
-    'mailjet' => [
-        'key' => 'APIKEY',
-        'secret' => 'APISECRET',
-    ],
+'mailjet' => [
+    'key' => 'APIKEY',
+    'secret' => 'APISECRET',
+],
 ```  
  
 And replace the values with your respective api key and secret key.
@@ -46,27 +47,29 @@ I have also integrated direct access to Mailtjet's API, based on their [example 
 
 To install, append the aliases in config/app.php with
 ```php
-    'Mailjet'   => 'Sboo\Laravel5Mailjet\Facades\Mailjet',
+'Mailjet'   => 'Sboo\Laravel5Mailjet\Facades\Mailjet',
 ```
     
 To use the API in your code, add 
-    
-    use Mailjet;
+```php 
+use Mailjet;
+```
 
 ### Examples
+_Based on https://github.com/mailjet/mailjet-apiv3-php-simple/blob/master/README.md_
 
 #### SendAPI
 
 - A function to send an email :
 ```php
 function sendEmail() {
-    $params = array(
+    $params = [
         "method" => "POST",
         "from" => "ms.mailjet@example.com",
         "to" => "mr.mailjet@example.com",
         "subject" => "Hello World!",
         "text" => "Greetings from Mailjet."
-    );
+    ];
 
     $result = Mailjet::sendEmail($params);
 
@@ -82,14 +85,14 @@ function sendEmail() {
 - A function to send an email with some attachments (absolute paths on your computer) :
 ```php
 function sendEmailWithAttachments() {
-    $params = array(
+    $params = [
         "method" => "POST",
         "from" => "ms.mailjet@example.com",
         "to" => "mr.mailjet@example.com",
         "subject" => "Hello World!",
         "text" => "Greetings from Mailjet.",
-        "attachment" => array("@/path/to/first/file.txt", "@/path/to/second/file.txt")
-    );
+        "attachment" => ["@/path/to/first/file.txt", "@/path/to/second/file.txt"]
+    ];
 
     $result = Mailjet::sendEmail($params);
 
@@ -106,14 +109,14 @@ function sendEmailWithAttachments() {
 ```php
 function sendEmailWithInlineAttachments() {
     
-    $params = array(
+    $params = [
         "method" => "POST",
         "from" => "ms.mailjet@example.com",
         "to" => "mr.mailjet@example.com",
         "subject" => "Hello World!",
         "html" => "<html>Greetings from Mailjet <img src=\"cid:photo1.jpg\"><img src=\"cid:photo2.jpg\"></html>",
-    "inlineattachment" => array("@/path/to/photo1.jpg", "@/path/to/photo2.jpg")
-    );
+    "inlineattachment" => ["@/path/to/photo1.jpg", "@/path/to/photo2.jpg"]
+    ];
 
     $result = Mailjet::sendEmail($params);
 
@@ -145,10 +148,10 @@ function viewProfileInfo() {
 ```php
 function updateProfileInfo() {
     
-    $params = array(
+    $params = [
         "method" => "PUT",
         "AddressCity" => "New York"
-    );
+    ];
 
     $result = Mailjet::myprofile($params);
 
@@ -183,12 +186,15 @@ function listContacts()
 ```php
 function updateContactData($id) {
     
-    $data = array(array('Name' => 'lastname', 'Value' => 'Jet'), array('Name' => 'firstname', 'Value' => 'Mail'));
-    $params = array(
+    $data = [
+        ['Name' => 'lastname', 'Value' => 'Jet'], 
+        ['Name' => 'firstname', 'Value' => 'Mail']
+    ];
+    $params = [
         'ID' => $id,
         'Data' => $data,
         'method' => 'PUT'
-    );
+    ];
 
     $result = Mailjet::contactdata($params);
 
@@ -205,10 +211,10 @@ function updateContactData($id) {
 ```php
 function createList($Lname) {
     
-    $params = array(
+    $params = [
         "method" => "POST",
         "Name" => $Lname
-    );
+    ];
 
     $result = Mailjet::contactslist($params);
 
@@ -225,10 +231,10 @@ function createList($Lname) {
 ```php
 function getList($listID) {
     
-    $params = array(
+    $params = [
         "method" => "VIEW",
         "ID" => $listID
-    );
+    ];
 
     $result = Mailjet::contactslist($params);
 
@@ -247,10 +253,10 @@ Note : You can use unique fields of resources instead of IDs, like
 ```php
 function createContact($Cemail) {
     
-    $params = array(
+    $params = [
         "method" => "POST",
         "Email" => $Cemail
-    );
+    ];
 
     $result = Mailjet::contact($params);
 
@@ -267,12 +273,12 @@ function createContact($Cemail) {
 ```php
 function addContactToList($contactID, $listID) {
     
-    $params = array(
+    $params = [
         "method" => "POST",
         "ContactID" => $contactID,
         "ListID" => $listID,
         "IsActive" => "True"
-    );
+    ];
 
     $result = Mailjet::listrecipient($params);
 
@@ -289,10 +295,10 @@ function addContactToList($contactID, $listID) {
 ```php
 function deleteList($listID) {
     
-    $params = array(
+    $params = [
         "method" => "DELETE",
         "ID" => $listID
-    );
+    ];
 
     $result = Mailjet::contactslist($params);
 
@@ -310,11 +316,11 @@ function deleteList($listID) {
 function getUnsubscribedContactsFromList($listID) {
 	
 	
-	$params = array(
+	$params = [
 		"method" => "GET",
 		"ContactsList" => $listID,
 		"Unsub" => true
-	);
+	];
 	
 	$result = Mailjet::listrecipient($params);
 	
@@ -331,10 +337,10 @@ function getUnsubscribedContactsFromList($listID) {
 ```php
 function getContact($contactID) {
     
-    $params = array(
+    $params = [
         "method" => "VIEW",
         "ID" => $contactID
-    );
+    ];
 
     $result = Mailjet::contact($params);
 
@@ -363,11 +369,10 @@ Example with a ```GET``` on ```DetailContent``` :
 
 ```php
 function getNewsletterDetailcontent($newsletter_id) {
-    $mj = new Mailjet('', '');
-    $params = array(
+    $params = [
         "method" => "GET",
         "ID" => $newsletter_id
-    );
+    ];
 
     $result = Mailjet::newsletterDetailContent($params);
 
@@ -387,8 +392,7 @@ Here is an example :
 
 ```php
 function scheduleNewsletter($newsletter_id) {
-    $mj = new Mailjet('', '');
-    $params = array(
+    $params = [
         "method" => "POST",
         "ID" => $newsletter_id,
         "date" => "2014-11-25T10:12:59Z"
@@ -412,11 +416,11 @@ For the second case, here is an example :
 
 ```php
 function sendNewsletter($newsletter_id) {
-    $mj = new Mailjet('', '');
-    $params = array(
+    
+    $params = [
         "method" => "POST",
         "ID" => $newsletter_id
-    );
+    ];
 
     $result = Mailjet::newsletterSend($params);
 
@@ -434,13 +438,15 @@ To do so, you have to perform a ```POST``` request on a newsletter with action `
 
 ```php
 function testNewsletter($newsletter_id) {
-    $mj = new Mailjet('', '');
-    $recipients = array(array('Email' => 'mailjet@example.org', 'Name' => 'Mailjet'));
-    $params = array(
+    
+    $recipients = [
+        ['Email' => 'mailjet@example.org', 'Name' => 'Mailjet']
+    ];
+    $params = [
         "method" => "POST",
         "ID" => $newsletter_id,
         "Recipients" => $recipients
-    );
+    ];
 
     $result = Mailjet::newsletterTest($params);
 
