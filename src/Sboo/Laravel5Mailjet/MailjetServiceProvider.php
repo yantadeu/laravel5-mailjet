@@ -1,5 +1,6 @@
 <?php namespace Sboo\Laravel5Mailjet;
 
+use Sboo\Laravel5Mailjet\Api\Mailjet;
 use Swift_Mailer;
 use Illuminate\Mail\Mailer;
 use Illuminate\Support\ServiceProvider;
@@ -20,6 +21,12 @@ class MailjetServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+        $this->app->singleton('mailjet', function($app)
+        {
+            $config = $app['config']->get('services.mailjet', array());
+            return new Mailjet($config['key'], $config['secret']);
+        });
+
         $this->app->singleton('mailer', function($app)
         {
             $this->registerSwiftMailer();
@@ -114,7 +121,7 @@ class MailjetServiceProvider extends ServiceProvider {
      */
     public function provides()
     {
-        return ['mailer', 'swift.mailer', 'swift.transport'];
+        return ['mailer', 'swift.mailer', 'swift.transport','mailjet'];
     }
 
 }

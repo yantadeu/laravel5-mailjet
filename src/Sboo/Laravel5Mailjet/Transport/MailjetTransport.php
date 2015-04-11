@@ -72,14 +72,16 @@ class MailjetTransport implements Swift_Transport {
      */
     public function send(Swift_Mime_Message $message, &$failedRecipients = null)
     {
-//        $client = $this->getHttpClient();
-//
-//        return $client->post($this->url, ['auth' => ['api', $this->key],
-//            'body' => [
-//                'to' => $this->getTo($message),
-//                'message' => new PostFile('message', (string) $message),
-//            ],
-//        ]);
+        $client = $this->getHttpClient();
+
+        return $client->post($this->url, ['auth' => [$this->key, $this->secret],
+            'body' => [
+                'from' => $this->getFrom($message),
+                'to' => $this->getTo($message),
+                'subject' => $message->getSubject(),
+                'html' => $message->getBody()
+            ],
+        ]);
     }
 
     /**
@@ -98,18 +100,35 @@ class MailjetTransport implements Swift_Transport {
      */
     protected function getTo(Swift_Mime_Message $message)
     {
-//        $formatted = [];
-//
-//        $contacts = array_merge(
-//            (array) $message->getTo(), (array) $message->getCc(), (array) $message->getBcc()
-//        );
-//
-//        foreach ($contacts as $address => $display)
-//        {
-//            $formatted[] = $display ? $display." <$address>" : $address;
-//        }
-//
-//        return implode(',', $formatted);
+        $formatted = [];
+
+        $contacts = array_merge(
+            (array) $message->getTo(), (array) $message->getCc(), (array) $message->getBcc()
+        );
+
+        foreach ($contacts as $address => $display)
+        {
+            $formatted[] = $display ? $display." <$address>" : $address;
+        }
+
+        return implode(',', $formatted);
+    }
+
+    /**
+     * Get the "from" payload field for the API request.
+     *
+     * @param  \Swift_Mime_Message  $message
+     * @return array
+     */
+    protected function getFrom(Swift_Mime_Message $message)
+    {
+        $formatted = [];
+        foreach ($message->getFrom() as $address => $display)
+        {
+            $formatted[] = $display ? $display." <$address>" : $address;
+        }
+
+        return $formatted[0];
     }
 
     /**

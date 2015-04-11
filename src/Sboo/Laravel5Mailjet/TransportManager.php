@@ -6,9 +6,9 @@ use Illuminate\Mail\TransportManager as BaseTransportManager;
 class TransportManager extends BaseTransportManager {
 
     /**
-     * Create an instance of the Mailgun Swift Transport driver.
+     * Create an instance of the Mailjet Swift Transport driver.
      *
-     * @return \Illuminate\Mail\Transport\MailgunTransport
+     * @return MailjetTransport
      */
     protected function createMailjetDriver()
     {
