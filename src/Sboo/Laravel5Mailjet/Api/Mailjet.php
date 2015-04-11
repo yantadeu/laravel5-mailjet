@@ -27,6 +27,8 @@ class Mailjet
     var $apiKey = '';
     var $secretKey = '';
 
+    var $_response_code;
+
     # Constructor function
     public function __construct($apiKey = false, $secretKey = false)
     {
@@ -154,6 +156,10 @@ class Mailjet
         }
 
         return $return;
+    }
+
+    public function getResponseCode() {
+        return $this->_response_code;
     }
 
     public function requestUrlBuilder($resource, $params = array(), $request, $id)
