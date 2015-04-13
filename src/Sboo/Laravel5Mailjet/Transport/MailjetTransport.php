@@ -1,5 +1,6 @@
 <?php namespace Sboo\Laravel5Mailjet\Transport;
 
+use GuzzleHttp\Post\PostBody;
 use Swift_Transport;
 use GuzzleHttp\Client;
 use Swift_Mime_Message;
@@ -75,12 +76,7 @@ class MailjetTransport implements Swift_Transport {
         $client = $this->getHttpClient();
 
         return $client->post($this->url, ['auth' => [$this->key, $this->secret],
-            'body' => [
-                'from' => $this->getFrom($message),
-                'to' => $this->getTo($message),
-                'subject' => $message->getSubject(),
-                'html' => $message->getBody()
-            ],
+            'body' => $this->getBody($message)
         ]);
     }
 
@@ -129,6 +125,46 @@ class MailjetTransport implements Swift_Transport {
         }
 
         return $formatted[0];
+    }
+
+    /**
+     * Get the "body" payload field for the Guzzle request.
+     *
+     * @param Swift_Mime_Message $message
+     * @return PostBody
+     */
+    protected function getBody(Swift_Mime_Message $message) {
+        $body = new PostBody();
+        $body->setField('from', $this->getFrom($message));
+        $body->setField('to',   $this->getTo($message) );
+        $body->setField('subject',   $message->getSubject() );
+
+        $messageHtml = $message->getBody();
+        if($message->getChildren()) {
+            foreach($message->getChildren() as $child) {
+
+                if(str_contains($messageHtml, $child->getId())) {
+                    $messageHtml = str_replace($child->getId(),$child->getFilename(),$messageHtml);
+                    $body->addFile(new PostFile(
+                            'inlineattachment',
+                            $child->getBody(),
+                            $child->getFilename(),
+                            ['Content-Type' => $child->getContentType()]
+                        )
+                    );
+                } else {
+                    $body->addFile(new PostFile(
+                            'attachment',
+                            $child->getBody(),
+                            $child->getFilename(),
+                            ['Content-Type' => $child->getContentType()]
+                        )
+                    );
+                }
+            }
+        }
+        $body->setField('html',   $messageHtml );
+        return $body;
     }
 
     /**
