@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Sboo\\Laravel5Mailjet\\": "src/Sboo/Laravel5Mailjet/"
+            "Sboo\\Laravel5Mailjet\\": "src/"
         }
     },
     "minimum-stability": "stable"
