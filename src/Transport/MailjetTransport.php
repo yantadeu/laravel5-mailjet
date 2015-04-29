@@ -153,13 +153,25 @@ class MailjetTransport implements Swift_Transport {
                         )
                     );
                 } else {
-                    $body->addFile(new PostFile(
-                            'attachment',
-                            $child->getBody(),
-                            $child->getFilename(),
-                            ['Content-Type' => $child->getContentType()]
-                        )
-                    );
+                    switch(get_class($child)) {
+                        case 'Swift_Attachment':
+                        case 'Swift_Image':
+                            $body->addFile(new PostFile(
+                                    'attachment',
+                                    $child->getBody(),
+                                    $child->getFilename(),
+                                    ['Content-Type' => $child->getContentType()]
+                                )
+                            );
+                            break;
+                        case 'Swift_MimePart':
+                            switch($child->getContentType()){
+                                case 'text/plain':
+                                    $body->setField('text',   $child->getBody() );
+                                    break;
+                            }
+                            break;
+                    }
                 }
             }
         }
