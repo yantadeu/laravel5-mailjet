@@ -1,3 +1,8 @@
+This library won't be updated for the time being, unfortunately I don't have enought time to work on it anymore.
+
+
+
+
 # Laravel 5 Mailjet Integration #
 
 - **Laravel**: 5
