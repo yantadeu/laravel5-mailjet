@@ -19,5 +19,5 @@
             "Sboo\\Laravel5Mailjet\\": "src/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev"
 }
