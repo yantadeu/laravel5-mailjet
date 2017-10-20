@@ -18,6 +18,5 @@
         "psr-4": {
             "Sboo\\Laravel5Mailjet\\": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
